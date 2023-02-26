@@ -21,13 +21,18 @@
                 <input type="submit" value="Start!" />
             </form>
         </div>
-        <div id="gameWrapper" class="hidden">
+        <div id="gameWrapper">
+            <h1>Hangman Game</h1>
+            <p>Guess the word before the hangman is complete.</p>
+            <canvas id="hangmanCanvas" width="500" height="500"></canvas>
+            <h2>Guesses: <span id="guesses"></span></h2>
+            <h3><span id="wordHolder"></span></h3>
+            <p>Previously guessed letters: <span id="previousGuesses"></span></p>
             <form id="guessForm">
-                <input
-                    type="text"
-                    id="guessInput"
-                    placeholder="Guess a letter!"
-                />
+              <input type="text" id="guessInput" required>
+              <button type="submit">Guess</button>
+            </form>
+          </div>
                 <input type="submit" id="guessSubmitButton" value="Guess" />
             </form>
             <button type="button" id="resetGame" class="hidden">
