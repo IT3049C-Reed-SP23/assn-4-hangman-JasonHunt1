@@ -6,24 +6,44 @@ class Hangman {
 
     this.canvas = _canvas;
     this.ctx = this.canvas.getContext(`2d`);
+    this.incorrectGuesses = 0;
   }
 
   /**
    * This function takes a difficulty string as a patameter
    * would use the Fetch API to get a random word from the Hangman
-   * To get an easy word: https://hangman-micro-service-bpblrjerwh.now.sh?difficulty=easy
-   * To get an medium word: https://hangman-micro-service-bpblrjerwh.now.sh?difficulty=medium
-   * To get an hard word: https://hangman-micro-service-bpblrjerwh.now.sh?difficulty=hard
+   * To get an easy word: https://it3049c-hangman.fly.dev/?difficulty=easy
+   * To get an medium word: https://it3049c-hangman.fly.dev/?difficulty=medium
+   * To get an hard word: https://it3049c-hangman.fly.dev/?difficulty=hard
    * The results is a json object that looks like this:
    *    { word: "book" }
    * */
-  getRandomWord(difficulty) {
-    return fetch(
-      `https://hangman-micro-service-bpblrjerwh.now.sh?difficulty=${difficulty}`
-    )
-      .then((r) => r.json())
-      .then((r) => r.word);
+  async getRandomWord(difficulty) {
+    const response = await fetch(
+      `https://it3049c-hangman.fly.dev/?difficulty=${difficulty}`
+    );
+    const data = await response.json();
+    this.word = data.word.toLowerCase();
+    this.wordLength = this.word.length;
+    this.guessesLeft = 6;
+    this.guessedLetters.clear();
+    this.updateWordDisplay();
   }
+  updateWordDisplay() {
+    const wordDisplay = document.getElementById('word-display');
+    let displayString = '';
+    for (let i = 0; i < this.wordLength; i++) {
+      const letter = this.word[i];
+      if (this.guessedLetters.has(letter)) {
+        displayString += letter;
+      } else {
+        displayString += '_';
+      }
+      displayString += ' ';
+    }
+    wordDisplay.textContent = displayString;
+  }
+
 
   /**
    *
@@ -86,12 +106,6 @@ class Hangman {
     return ``;
   }
 
-  /**
-   * Clears the canvas
-   */
-  clearCanvas() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  }
 
   /**
    * Draws the hangman base
@@ -103,15 +117,67 @@ class Hangman {
     this.ctx.fillRect(10, 410, 175, 10); // Base
   }
 
-  drawHead() {}
 
-  drawBody() {}
+  /**
+   * Draws the hangman head
+   */
+  drawHead() {
+    this.ctx.beginPath();
+    this.ctx.arc(250, 100, 40, 0, Math.PI * 2, false);
+    this.ctx.stroke();
+  }
 
-  drawLeftArm() {}
+  /**
+   * Draws the hangman body
+   */
+  drawBody() {
+    this.ctx.fillRect(240, 140, 20, 100);
+  }
 
-  drawRightArm() {}
+  /**
+   * Draws the hangman left arm
+   */
+  drawLeftArm() {
+    this.ctx.beginPath();
+    this.ctx.moveTo(240, 170);
+    this.ctx.lineTo(200, 220);
+    this.ctx.stroke();
+  }
 
-  drawLeftLeg() {}
+  /**
+   * Draws the hangman right arm
+   */
+  drawRightArm() {
+    this.ctx.beginPath();
+    this.ctx.moveTo(260, 170);
+    this.ctx.lineTo(300, 220);
+    this.ctx.stroke();
+  }
 
-  drawRightLeg() {}
+  /**
+   * Draws the hangman left leg
+   */
+  drawLeftLeg() {
+    this.ctx.beginPath();
+    this.ctx.moveTo(240, 240);
+    this.ctx.lineTo(200, 300);
+    this.ctx.stroke();
+  }
+
+  /**
+   * Draws the hangman right leg
+   */
+  drawRightLeg() {
+    this.ctx.beginPath();
+    this.ctx.moveTo(260, 240);
+    this.ctx.lineTo(300, 300);
+    this.ctx.stroke();
+  }
+
+  /**
+   * Clears the canvas
+   */
+  clearCanvas() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
 }
